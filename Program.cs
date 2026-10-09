@@ -1,4 +1,4 @@
-ShoppingList list = new ShoppingList("items.txt");
+ShoppingList list = new ShoppingList("items.txt", 500);
 list.Load();
 
 while (true)
@@ -31,8 +31,31 @@ while (true)
             continue;
         }
 
-        list.Add(new Item(name, price));
+        try
+        {
+            Item item = new Item(name, price);
+
+            if (list.Add(item))
+            {
+                Console.WriteLine("Varan har lagts till.");
+            }
+            else
+            {
+                Console.WriteLine("Varan kunde inte läggas till eftersom budgeten på 500 kr överskrids.");
+            }
+        }
+        
+        catch (ArgumentOutOfRangeException)
+        {
+            Console.WriteLine("Priset får inte vara negativt.");
+        }
+        
+        catch (ArgumentException)
+        {
+            Console.WriteLine("Namnet får inte vara tomt.");
+        }
     }
+    
     else if (choice == 2)
     {
         Console.Write("Nummer: ");
