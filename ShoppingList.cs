@@ -77,29 +77,59 @@ class ShoppingList
         try
         {
             File.WriteAllText(path, string.Join("\r\n", lines) + "\r\n");
+            Console.WriteLine("Listan är sparad.");
         }
-        catch
+
+        catch (IOException)
         {
+            Console.WriteLine("Det gick inte att spara listan.");
         }
 
-        Console.WriteLine("Listan är sparad.");
-    }
-
+        catch (UnauthorizedAccessException)
+        {
+            Console.WriteLine("Du har inte behörighet att spara filen.");
+        }
+}
     // Reads the file back into the list.
     public void Load()
     {
-        string text = File.ReadAllText(path);
-        string[] lines = text.Split('\n');
-
-        foreach (string line in lines)
+        if (!File.Exists(path))
         {
-            if (string.IsNullOrWhiteSpace(line))
+            Console.WriteLine("Ingen sparad lista hittades. En ny lista startas.");
+            return;
+        }
+
+        try
+        {
+            string[] lines = File.ReadAllLines(path);
+
+            foreach (string line in lines)
             {
-                continue;
+                if (string.IsNullOrWhiteSpace(line))
+                {
+                    continue;
+                }
+
+                string[] parts = line.Split(';');
+
+                if (parts.Length != 2 || !int.TryParse(parts[0], out int price))
+                {
+                    Console.WriteLine("En felaktig rad i filen hoppades över.");
+                    continue;
+                }
+
+                items.Add(new Item(parts[1].Trim(), price));
             }
-            
-            string[] parts = line.Split(';');
-            items.Add(new Item(parts[1].Trim(), int.Parse(parts[0])));
+        }
+
+        catch (IOException)
+        {
+            Console.WriteLine("Det gick inte att läsa filen.");
+        }
+        
+        catch (UnauthorizedAccessException)
+        {
+            Console.WriteLine("Du har inte behörighet att läsa filen.");
         }
     }
 }
