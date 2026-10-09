@@ -25,7 +25,7 @@ class ShoppingList
     {
         int sum = 0;
 
-        for (int i = 1; i < items.Count; i++)
+        for (int i = 0; i < items.Count; i++)
         {
             sum += items[i].Price;
         }
@@ -86,8 +86,13 @@ class ShoppingList
 
         foreach (string line in lines)
         {
+            if (string.IsNullOrWhiteSpace(line))
+            {
+                continue;
+            }
+            
             string[] parts = line.Split(';');
-            items.Add(new Item(parts[1], int.Parse(parts[0])));
+            items.Add(new Item(parts[1].Trim(), int.Parse(parts[0])));
         }
     }
 }
