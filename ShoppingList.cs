@@ -15,9 +15,16 @@ class ShoppingList
     }
 
     // Removes the item the user sees as number 1, 2, 3 ...
-    public void RemoveAt(int number)
+   public void RemoveAt(int number)
     {
-        items.RemoveAt(number - 1);
+        if (number >= 1 && number <= items.Count)
+        {
+            items.RemoveAt(number - 1);
+        }
+        else
+        {
+        Console.WriteLine("Det finns ingen vara med det numret.");
+        }
     }
 
     // Adds up the price of every item on the list.
@@ -38,7 +45,7 @@ class ShoppingList
     {
         foreach (Item item in items)
         {
-            if (item.Name == name)
+            if (item.Name.Equals(name.Trim(), StringComparison.OrdinalIgnoreCase))
             {
                 return item;
             }
