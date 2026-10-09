@@ -13,20 +13,35 @@ while (true)
     Console.WriteLine("5. Avsluta");
     Console.Write("Välj: ");
 
-    int choice = int.Parse(Console.ReadLine());
+    if (!int.TryParse(Console.ReadLine(), out int choice))
+    {
+        Console.WriteLine("Du måste skriva ett nummer.");
+        continue;
+    }
 
     if (choice == 1)
     {
         Console.Write("Namn: ");
-        string name = Console.ReadLine();
+        string name = Console.ReadLine() ?? "";
+
         Console.Write("Pris: ");
-        int price = int.Parse(Console.ReadLine());
+        if (!int.TryParse(Console.ReadLine(), out int price))
+        {
+            Console.WriteLine("Priset måste vara ett heltal.");
+            continue;
+        }
+
         list.Add(new Item(name, price));
     }
     else if (choice == 2)
     {
         Console.Write("Nummer: ");
-        int number = int.Parse(Console.ReadLine());
+        if (!int.TryParse(Console.ReadLine(), out int number))
+        {
+            Console.WriteLine("Du måste skriva ett nummer.");
+            continue;
+        }
+
         list.RemoveAt(number);
     }
     else if (choice == 3)
@@ -36,7 +51,8 @@ while (true)
     else if (choice == 4)
     {
         Console.Write("Namn att söka efter: ");
-        string wanted = Console.ReadLine();
+        string wanted = Console.ReadLine() ?? "";
+
         Item found = list.Find(wanted);
 
         if (found == null)
@@ -51,5 +67,9 @@ while (true)
     else if (choice == 5)
     {
         break;
+    }
+    else
+    {
+        Console.WriteLine("Det finns inget sådant menyval.");
     }
 }
